@@ -20,7 +20,7 @@ langchain-community==0.3.18
 #langchain-huggingface==0.1.2
 #langchain-tests==0.3.12
 #langchain-text-splitters==0.3.6
-langchain-upstage"==0.6.0"
+langchain-upstage==0.6.0
 markdown-it-py==3.0.0
 MarkupSafe==3.0.2
 numpy==1.26.4
