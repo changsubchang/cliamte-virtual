@@ -16,6 +16,9 @@ from langchain_cerebras import ChatCerebras
 #huggingface
 from langchain_huggingface import HuggingFaceEmbeddings
 
+#upstage
+from langchain_upstage import UpstageEmbeddings
+
 from langchain_community.chat_message_histories import ChatMessageHistory
 from langchain_core.chat_history import BaseChatMessageHistory
 from langchain_core.runnables.history import RunnableWithMessageHistory
@@ -31,8 +34,8 @@ def get_session_history(session_id: str) -> BaseChatMessageHistory:
 
 
 def get_retriever():
-    embedding = HuggingFaceEmbeddings(model="Linq-AI-Research/Linq-Embed-Mistral")
-    index_name = 'tax-markdown-index'
+    embedding = UpstageEmbeddings(model="embedding-passage")
+    index_name = 'bams-upstage-index'
     database = PineconeVectorStore.from_existing_index(index_name=index_name, embedding=embedding)
     retriever = database.as_retriever(search_kwargs={'k': 4})
     return retriever
@@ -63,21 +66,19 @@ def get_history_retriever():
     return history_aware_retriever
 
 
-def get_llm(model='gpt-4o'):
+def get_llm(model='gpt-4o-mini'):
     llm = ChatOpenAI(model=model)
     return llm
 
 
 def get_dictionary_chain():
-    dictionary = ["사람을 나타내는 표현 -> 거주자"]
+    dictionary = ["Weather -> Climate"] #sample
     llm = get_llm()
     prompt = ChatPromptTemplate.from_template(f"""
-        사용자의 질문을 보고, 우리의 사전을 참고해서 사용자의 질문을 변경해주세요.
-        만약 변경할 필요가 없다고 판단된다면, 사용자의 질문을 변경하지 않아도 됩니다.
-        그런 경우에는 질문만 리턴해주세요
-        사전: {dictionary}
+        Refer to the dictionary and rewrite the question. If not needed, you don't have to change the questions. 
+        Dictionary: {dictionary}
         
-        질문: {{question}}
+        Question: {{question}}
     """)
 
     dictionary_chain = prompt | llm | StrOutputParser()
@@ -98,11 +99,11 @@ def get_rag_chain():
         examples=answer_examples,
     )
     system_prompt = (
-        "당신은 소득세법 전문가입니다. 사용자의 소득세법에 관한 질문에 답변해주세요"
-        "아래에 제공된 문서를 활용해서 답변해주시고"
-        "답변을 알 수 없다면 모른다고 답변해주세요"
-        "답변을 제공할 때는 소득세법 (XX조)에 따르면 이라고 시작하면서 답변해주시고"
-        "2-3 문장정도의 짧은 내용의 답변을 원합니다"
+        "You are a climate scientist"
+        "Refer to the document in the databse"
+        "If you do not have an answer, do not make up, but say you do not know"
+        "Start with 'According to'"
+        "Make 2-3 sentences with actual numbers and statistics."
         "\n\n"
         "{context}"
     )
