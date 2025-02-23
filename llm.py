@@ -135,8 +135,8 @@ def get_rag_chain():
 def get_ai_response(user_message):
     dictionary_chain = get_dictionary_chain()
     rag_chain = get_rag_chain()
-    tax_chain = {"input": dictionary_chain} | rag_chain
-    ai_response = tax_chain.stream(
+    climate_chain = {"input": dictionary_chain} | rag_chain
+    ai_response = climate_chain.stream(
         {
             "question": user_message
         },
