@@ -11,10 +11,10 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_pinecone import PineconeVectorStore
 
 #cerebras
-from langchain_cerebras import ChatCerebras
+#from langchain_cerebras import ChatCerebras
 
 #huggingface
-from langchain_huggingface import HuggingFaceEmbeddings
+#from langchain_huggingface import HuggingFaceEmbeddings
 
 #upstage
 from langchain_upstage import UpstageEmbeddings
