@@ -1,11 +1,15 @@
 import streamlit as st
 
+from dotenv import load_dotenv
+
 from llm import get_ai_response
 
 st.set_page_config(page_title="Cliamte Virtual Assitant", page_icon=":🌏", layout="wide")
 
 st.title("🌏 Cliamte Virtual Assitant")
 st.caption("Powered by State of the Climate - BAMS")
+
+load_dotenv()
 
 if 'message_list' not in st.session_state:
     st.session_state.message_list = []
